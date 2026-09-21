@@ -2316,3 +2316,236 @@ body, html {
   color: var(--cr-text-muted);
   font-family: var(--font-mono);
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVE ARCHITECTURE (SMARTPHONES & TABLETS)
+   ========================================================================== */
+
+/* Mobile Tab Bar (Hidden on Desktop) */
+.cr-mobile-tab-bar {
+  display: none;
+  align-items: center;
+  background-color: #171a21;
+  border-bottom: 1px solid var(--cr-border);
+  padding: 0.35rem 0.65rem;
+  gap: 0.5rem;
+  z-index: 40;
+}
+
+.cr-mobile-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid var(--cr-border-subtle);
+  background-color: var(--cr-bg-card);
+  color: var(--cr-text-secondary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cr-mobile-tab-btn.active {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cr-mobile-tab-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--cr-text-muted);
+}
+
+.cr-sidebar-backdrop {
+  display: none;
+}
+
+/* Medium & Small Devices Breakpoint (<= 900px) */
+@media (max-width: 900px) {
+  .cr-app {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .cr-navbar {
+    padding: 0 0.5rem;
+    height: 48px;
+    min-height: 48px;
+  }
+
+  .cr-breadcrumb,
+  .cr-nav-separator {
+    display: none !important;
+  }
+
+  .cr-nav-actions {
+    gap: 0.35rem;
+  }
+
+  /* Hide secondary desktop buttons to keep header clean */
+  .cr-btn-scan-nav,
+  .cr-btn-subtle,
+  .cr-engine-chip span:last-child {
+    display: none !important;
+  }
+
+  .cr-review-shortcut-tag {
+    display: none !important;
+  }
+
+  .cr-btn-review {
+    padding: 0.35rem 0.65rem;
+  }
+
+  /* Show Mobile Segmented Tab Bar */
+  .cr-mobile-tab-bar {
+    display: flex;
+  }
+
+  /* Workspace Container */
+  .cr-workspace {
+    height: calc(100dvh - 48px - 45px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* History & Files Drawer Overlay */
+  .cr-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 90;
+    animation: crFadeIn 0.2s ease;
+  }
+
+  .cr-history-rail.open {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 85vw;
+    max-width: 320px;
+    z-index: 100;
+    box-shadow: 6px 0 30px rgba(0, 0, 0, 0.75);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .cr-history-rail.closed {
+    position: fixed;
+    left: -330px;
+    width: 320px;
+    border: none;
+  }
+
+  /* Single Column Workspace with Tab Switching */
+  .cr-main-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .cr-main-layout.mobile-view-editor .cr-studio-pane {
+    display: none !important;
+  }
+
+  .cr-main-layout.mobile-view-editor .cr-editor-pane {
+    display: flex !important;
+    width: 100%;
+    height: 100%;
+    border-right: none;
+  }
+
+  .cr-main-layout.mobile-view-output .cr-editor-pane {
+    display: none !important;
+  }
+
+  .cr-main-layout.mobile-view-output .cr-studio-pane {
+    display: flex !important;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cr-editor-metrics .cr-metric-tag {
+    display: none;
+  }
+
+  .cr-pane-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .cr-pane-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cr-pane-tab {
+    padding: 0 0.65rem;
+    font-size: 0.76rem;
+    white-space: nowrap;
+  }
+
+  .cr-diff-dual-container {
+    grid-template-columns: 1fr;
+  }
+
+  .cr-diff-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .cr-diff-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .cr-modal-box {
+    width: 92vw;
+    max-width: 440px;
+  }
+}
+
+/* Extra Small Phones (<= 480px) */
+@media (max-width: 480px) {
+  .cr-brand-badge {
+    display: none !important;
+  }
+
+  .cr-lang-pill .cr-lang-label {
+    display: none !important;
+  }
+
+  .cr-btn-upload span,
+  .cr-btn-run span {
+    display: none !important;
+  }
+
+  .cr-btn-upload {
+    padding: 0.35rem 0.45rem;
+  }
+
+  .cr-btn-run {
+    padding: 0.35rem 0.55rem;
+  }
+
+  .cr-btn-review .cr-review-btn-text {
+    font-size: 0.74rem;
+  }
+
+  .cr-pane-body {
+    padding: 0.75rem 0.5rem;
+  }
+}

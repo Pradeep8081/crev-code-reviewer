@@ -487,11 +487,14 @@ export default function App() {
 
   const [sampleIdx, setSampleIdx] = useState(0);
 
-  // Left History Sidebar State
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Left History Sidebar State (Closed by default on mobile)
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' ? window.innerWidth > 900 : true);
   const [historySearch, setHistorySearch] = useState('');
   const [history, setHistory] = useState(getValidHistory);
   const [activeHistoryId, setActiveHistoryId] = useState(null);
+
+  // Mobile Tab View: 'editor' | 'output'
+  const [mobileTab, setMobileTab] = useState('editor');
 
   // Studio Pane View: 'terminal' | 'review' | 'diagnostics' | 'complexity'
   const [studioTab, setStudioTab] = useState('terminal');
@@ -805,6 +808,10 @@ export default function App() {
     } else if (item.review) {
       setStudioTab('review');
     }
+    if (typeof window !== 'undefined' && window.innerWidth <= 900) {
+      setSidebarOpen(false);
+      setMobileTab(item.runResult || item.review ? 'output' : 'editor');
+    }
     showToast(`Loaded: ${item.title}`);
   };
 
@@ -978,6 +985,7 @@ export default function App() {
     setIsRunning(true);
     setRunResult(null);
     setStudioTab('terminal'); // Switch side tab to Terminal!
+    setMobileTab('output'); // Auto-switch view to output on mobile!
 
     try {
       const response = await axios.post(`${BACKEND_BASE}/ai/run-code`, {
@@ -1025,6 +1033,7 @@ export default function App() {
     }
 
     setStudioTab('review');
+    setMobileTab('output'); // Auto-switch view to review on mobile!
     setIsReviewing(true);
 
     try {
@@ -1204,8 +1213,37 @@ export default function App() {
         style={{ display: 'none' }} 
       />
 
+      {/* MOBILE VIEW SEGMENTED CONTROLLER (Only visible on mobile <= 900px) */}
+      <div className="cr-mobile-tab-bar">
+        <button 
+          className={`cr-mobile-tab-btn ${mobileTab === 'editor' ? 'active' : ''}`}
+          onClick={() => setMobileTab('editor')}
+        >
+          <FileCode size={14} />
+          <span>Editor</span>
+          <span className="cr-mobile-tab-badge">{codeLines.length}L</span>
+        </button>
+        <button 
+          className={`cr-mobile-tab-btn ${mobileTab === 'output' ? 'active' : ''}`}
+          onClick={() => setMobileTab('output')}
+        >
+          <ShieldCheck size={14} />
+          <span>Review & Terminal</span>
+          {(isReviewing || isRunning) ? (
+            <Loader2 size={12} className="cr-spinner" />
+          ) : (review || runResult) ? (
+            <span className="cr-tab-dot success" />
+          ) : null}
+        </button>
+      </div>
+
       {/* 2. MAIN WORKSPACE CONTAINER */}
       <div className="cr-workspace">
+        {/* Mobile Backdrop for sidebar drawer */}
+        {sidebarOpen && (
+          <div className="cr-sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
+        )}
+
         {/* LEFT DEDICATED HISTORY & FILES SIDEBAR */}
         <aside className={`cr-history-rail ${sidebarOpen ? 'open' : 'closed'}`}>
           <div className="cr-rail-header">
@@ -1304,6 +1342,10 @@ export default function App() {
                       onClick={() => {
                         setActiveFileId(file.id);
                         if (file.runResult) setStudioTab('terminal');
+                        if (typeof window !== 'undefined' && window.innerWidth <= 900) {
+                          setSidebarOpen(false);
+                          setMobileTab('editor');
+                        }
                       }}
                     >
                       <div className="cr-file-row-left">
@@ -1390,7 +1432,7 @@ export default function App() {
         </aside>
 
         {/* CENTER / SPLIT VIEW: Editor on Left, Review on Right */}
-        <main className="cr-main-layout">
+        <main className={`cr-main-layout mobile-view-${mobileTab}`}>
           {/* LEFT STUDIO PANE: Code Editor & Execution Console */}
           <section className="cr-editor-pane">
             <div className="cr-editor-header">
