@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>C-rev: Intelligent Code Inspection & Peer Review Studio — Project Documentation</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 20mm 16mm;
+      @bottom-right {
+        content: "Page " counter(page);
+        font-family: 'Inter', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      line-height: 1.55;
+      font-size: 10pt;
+    }
+    .cover-page {
+      page-break-after: always;
+      padding-top: 45mm;
+      text-align: center;
+    }
+    .cover-badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 9pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 18px;
+    }
+    .cover-title {
+      font-size: 28pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .cover-subtitle {
+      font-size: 13pt;
+      color: #475569;
+      max-width: 580px;
+      margin: 0 auto 35mm auto;
+      line-height: 1.45;
+    }
+    .cover-meta-grid {
+      display: inline-grid;
+      grid-template-columns: 140px 220px;
+      row-gap: 8px;
+      text-align: left;
+      font-size: 10pt;
+      background: #f8fafc;
+      padding: 16px 24px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .cover-meta-label {
+      font-weight: 600;
+      color: #64748b;
+    }
+    .cover-meta-val {
+      color: #0f172a;
+      font-weight: 500;
+    }
+
+    /* Page Layout */
+    .section-block {
+      page-break-inside: avoid;
+      margin-bottom: 22px;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    h1 {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #0f172a;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h2 {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 14px 0 8px 0;
+    }
+    h3 {
+      font-size: 10.5pt;
+      font-weight: 600;
+      color: #334155;
+      margin: 10px 0 6px 0;
+    }
+    p {
+      margin-bottom: 8px;
+      color: #334155;
+    }
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 10px;
+      color: #334155;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    strong {
+      color: #0f172a;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 9pt;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 7px 10px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+    }
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* Code Blocks */
+    pre, code {
+      font-family: "JetBrains Mono", Consolas, Monaco, "Courier New", monospace;
+    }
+    code {
+      background: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 8.5pt;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 8.5pt;
+      line-height: 1.45;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+    pre code {
+      background: transparent;
+      padding: 0;
+      border: none;
+      color: inherit;
+    }
+
+    /* Callout Boxes */
+    .callout {
+      border-left: 4px solid #3b82f6;
+      background: #eff6ff;
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 9.5pt;
+    }
+    .callout.success {
+      border-left-color: #10b981;
+      background: #ecfdf5;
+    }
+    .callout.warning {
+      border-left-color: #f59e0b;
+      background: #fffbeb;
+    }
+    .callout-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #1e3a8a;
+    }
+    .callout.success .callout-title { color: #065f46; }
+    .callout.warning .callout-title { color: #92400e; }
+
+    /* Flowchart / Architecture Box */
+    .arch-container {
+      display: flex;
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .arch-card {
+      flex: 1;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px;
+      background: #f8fafc;
+      font-size: 8.5pt;
+    }
+    .arch-card-title {
+      font-weight: 700;
+      font-size: 9pt;
+      color: #1d4ed8;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+
+    /* Viva Q&A styling */
+    .viva-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      background: #ffffff;
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+    .viva-q {
+      background: #f1f5f9;
+      padding: 8px 12px;
+      font-weight: 600;
+      color: #0f172a;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 9.5pt;
+    }
+    .viva-a {
+      padding: 10px 12px;
+      font-size: 9pt;
+      color: #334155;
+    }
+    .viva-speech {
+      margin-top: 6px;
+      background: #eff6ff;
+      border-left: 3px solid #3b82f6;
+      padding: 6px 10px;
+      font-style: italic;
+      color: #1e40af;
+      font-size: 8.5pt;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="cover-page">
+    <div class="cover-badge">Major Software Engineering Project Documentation</div>
+    <div class="cover-title">C-REV: INTELLIGENT CODE INSPECTION & PEER REVIEW STUDIO</div>
+    <div class="cover-subtitle">
+      A Multi-Tier Static Analysis, Dual-Pane Sandbox Execution & Differential Diagnostic Remediation System for Software Engineers
+    </div>
+
+    <div class="cover-meta-grid">
+      <div class="cover-meta-label">Project Name:</div>
+      <div class="cover-meta-val">C-rev Studio (Code Reviewer)</div>
+      <div class="cover-meta-label">System Type:</div>
+      <div class="cover-meta-val">Full-Stack Web Engineering Tool</div>
+      <div class="cover-meta-label">Frontend Stack:</div>
+      <div class="cover-meta-val">React 18, Vite, Prism.js</div>
+      <div class="cover-meta-label">Backend Stack:</div>
+      <div class="cover-meta-val">Node.js, Express, Sandbox Engine</div>
+      <div class="cover-meta-label">Author / Student:</div>
+      <div class="cover-meta-val">Pradeep</div>
+      <div class="cover-meta-label">Repository:</div>
+      <div class="cover-meta-val">github.com/Pradeep8081/crev-code-reviewer</div>
+      <div class="cover-meta-label">Documentation Date:</div>
+      <div class="cover-meta-val">September 2026</div>
+    </div>
+  </div>
+
+  <!-- TABLE OF CONTENTS & ABSTRACT -->
+  <div class="section-block page-break">
+    <h1>1. Executive Summary & Problem Statement</h1>
+    <p>
+      In modern software engineering, peer code review and runtime error debugging are among the most critical yet time-consuming activities. Traditional tools typically present a binary outcome: either static linters that flag stylistic violations without runtime context, or cloud compilers that output raw, cryptic stack traces without actionable solutions.
+    </p>
+    <p>
+      <strong>C-rev</strong> solves this gap by building an integrated, developer-first engineering studio that combines:
+    </p>
+    <ul>
+      <li><strong>Multi-File Workspace Management:</strong> Supports uploading, editing, and batch-scanning multiple project files simultaneously.</li>
+      <li><strong>Isolated Sandbox Execution Engine:</strong> Spawns isolated child process environments to execute native Python and JavaScript/TypeScript routines safely, capturing execution duration, standard output, and runtime exceptions.</li>
+      <li><strong>Differential Remediation & Word-Level Highlighting:</strong> Automatically pinpoints the exact faulty sub-string expression (e.g. <code>acc.profile.tier</code>) and applies automated fixes (e.g. <code>acc.profile?.tier</code>) with sub-pixel zero cursor drift inside the live code editor canvas.</li>
+      <li><strong>Pragmatic Peer Review:</strong> Delivers concise health verdicts, Big-O time and space complexity ratings, and deep-dive architectural best practices tailored for working engineers.</li>
+    </ul>
+
+    <div class="callout success">
+      <div class="callout-title">Key Engineering Innovation</div>
+      Unlike traditional linters that merely highlight entire lines, C-rev implements a custom Differential Token Isolator (<code>getChangedTokenInfo</code>) coupled with a Prism Private Unicode Delimiter Injection algorithm to highlight exact erroneous expressions in place without breaking syntax tokenization.
+    </div>
+  </div>
+
+  <!-- SYSTEM ARCHITECTURE -->
+  <div class="section-block">
+    <h1>2. System Architecture & High-Level Design</h1>
+    <p>
+      The system follows a modern decoupled Client-Server architecture designed for high responsiveness, sub-second hot reloading, and secure process isolation.
+    </p>
+
+    <div class="arch-container">
+      <div class="arch-card">
+        <div class="arch-card-title">1. CLIENT LAYER (FRONTEND)</div>
+        <p><strong>Core:</strong> React 18 SPA + Vite Bundler</p>
+        <p><strong>Editor:</strong> react-simple-code-editor</p>
+        <p><strong>Syntax Lexer:</strong> Prism.js Tokenizer</p>
+        <p><strong>Markdown:</strong> React-Markdown + Rehype</p>
+        <p><strong>Styling:</strong> LeetCode Charcoal Dark Theme</p>
+        <p><strong>State:</strong> Workspace File Array, History LocalStorage, Active Diff Memo</p>
+      </div>
+
+      <div class="arch-card">
+        <div class="arch-card-title">2. API TRANSPORT LAYER</div>
+        <p><strong>Protocol:</strong> RESTful HTTP / JSON</p>
+        <p><strong>Client:</strong> Axios with 10MB payload limit</p>
+        <p><strong>Endpoints:</strong></p>
+        <p>• <code>POST /ai/run-code</code> (Execution & Crash Diagnosis)</p>
+        <p>• <code>POST /ai/get-review</code> (AST Peer Review & Big-O)</p>
+        <p>• <code>GET /</code> (Health & Engine Telemetry)</p>
+      </div>
+
+      <div class="arch-card">
+        <div class="arch-card-title">3. BACKEND RUNTIME ENGINE</div>
+        <p><strong>Runtime:</strong> Node.js v20+ / Express</p>
+        <p><strong>Sandbox:</strong> OS Child Process (<code>exec</code>)</p>
+        <p><strong>Timeout:</strong> 6,000ms safety watchdog</p>
+        <p><strong>Storage:</strong> Ephemeral OS temp files (<code>fs/promises</code>)</p>
+        <p><strong>Engine:</strong> Multi-model fallbacks (Gemini Flash Lite / 2.5 / 3.5)</p>
+      </div>
+    </div>
+
+    <h2>2.1 Execution Data Flow Sequence</h2>
+    <ol>
+      <li><strong>User Input:</strong> The developer writes or pastes code into the simple code editor canvas in the browser.</li>
+      <li><strong>Code Execution Trigger:</strong> Clicking <em>"Run Code"</em> posts the snippet and detected language to <code>/ai/run-code</code>.</li>
+      <li><strong>Sandbox Isolation:</strong> The Express backend writes the code to a cryptographically randomized temporary file in <code>os.tmpdir()</code> and executes it via a guarded child process with a 6-second watchdog timeout.</li>
+      <li><strong>Error Interception:</strong> If an unhandled exception or non-zero exit code occurs, standard error (stderr) is captured and passed to the diagnostic remediation engine.</li>
+      <li><strong>Remediation Extraction:</strong> The engine identifies the exact error line, faulty statement, corrected code, root cause, and suggested fix.</li>
+      <li><strong>Word-Level Highlighting:</strong> The client executes <code>getChangedTokenInfo(oldLine, newLine)</code> to compute prefix/suffix bounds, injects Unicode boundary markers into Prism, and renders an in-place glowing green/red token highlight in the code editor.</li>
+    </ol>
+  </div>
+
+  <!-- COMPLETE TECHNOLOGY STACK -->
+  <div class="section-block page-break">
+    <h1>3. Detailed Technology Stack & Rationale</h1>
+    <p>Every library and framework in C-rev was deliberately chosen to meet specific performance and architectural requirements:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Technology</th>
+          <th>Purpose & Why It Was Selected</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Frontend Framework</td>
+          <td><strong>React 18</strong></td>
+          <td>Declarative component model, virtual DOM diffing, and fine-grained state management using hooks (<code>useMemo</code>, <code>useRef</code>, <code>useEffect</code>).</td>
+        </tr>
+        <tr>
+          <td>Build Tooling</td>
+          <td><strong>Vite 8</strong></td>
+          <td>Instant Hot Module Replacement (HMR) via native ES modules and optimized Rollup production bundling (520ms build times).</td>
+        </tr>
+        <tr>
+          <td>Code Editor Canvas</td>
+          <td><strong>react-simple-code-editor</strong></td>
+          <td>Lightweight, zero-dependency code editor that superimposes a transparent <code>&lt;textarea&gt;</code> over a synchronized <code>&lt;pre&gt;&lt;code&gt;</code> syntax element. Avoids heavy Monaco bundle overhead.</td>
+        </tr>
+        <tr>
+          <td>Syntax Highlighting</td>
+          <td><strong>Prism.js</strong></td>
+          <td>High-speed regex grammar tokenizer supporting JavaScript, Python, TypeScript, C++, Java, and Go with modular theme stylesheets.</td>
+        </tr>
+        <tr>
+          <td>Markdown Parser</td>
+          <td><strong>React-Markdown + Rehype-Highlight</strong></td>
+          <td>Renders structured peer review reports with embedded syntax-highlighted code blocks securely without <code>dangerouslySetInnerHTML</code> vulnerabilities.</td>
+        </tr>
+        <tr>
+          <td>Icons & UI Assets</td>
+          <td><strong>Lucide React</strong></td>
+          <td>Crisp, tree-shakable SVG icon components representing developer tools (terminal, file check, shield, chevron, zap).</td>
+        </tr>
+        <tr>
+          <td>Backend Runtime</td>
+          <td><strong>Node.js (v20+) & Express</strong></td>
+          <td>Non-blocking, event-driven I/O model ideal for managing concurrent execution requests and file streams.</td>
+        </tr>
+        <tr>
+          <td>Execution Sandbox</td>
+          <td><strong>child_process (exec)</strong></td>
+          <td>Native OS process spawning with enforced 6-second timeout kill-signals and isolated temporary file lifecycle management.</td>
+        </tr>
+        <tr>
+          <td>Diagnostic Engine</td>
+          <td><strong>@google/genai SDK</strong></td>
+          <td>Low-latency inference models (Gemini Flash series) configured with strict JSON schemas and system instructions for AST and Big-O profiling.</td>
+        </tr>
+        <tr>
+          <td>Configuration</td>
+          <td><strong>dotenv</strong></td>
+          <td>Separates configuration from code; prevents accidental commitment of secret API keys to version control.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ALGORITHMIC INNOVATIONS -->
+  <div class="section-block page-break">
+    <h1>4. Core Algorithmic & Engineering Innovations</h1>
+
+    <h2>4.1 Differential Token Isolator: <code>getChangedTokenInfo</code></h2>
+    <p>
+      Standard diff algorithms (like Myers Diff) operate at line or character granularity. When a line changes from:
+      <br>
+      <code>console.log("User:", acc.username, "Tier:", acc.profile.tier);</code>
+      <br>
+      to:
+      <br>
+      <code>console.log("User:", acc.username, "Tier:", acc.profile?.tier);</code>
+      <br>
+      a naive diff flags the entire 65-character line. C-rev's <code>getChangedTokenInfo</code> algorithm isolates the exact sub-expression:
+    </p>
+
+    <pre><code>function getChangedTokenInfo(oldStr, newStr) {
+  if (!oldStr || !newStr || oldStr === newStr) return null;
+
+  // 1. Compute common prefix
+  let prefixLen = 0;
+  while (prefixLen &lt; oldStr.length && prefixLen &lt; newStr.length && oldStr[prefixLen] === newStr[prefixLen]) {
+    prefixLen++;
+  }
+
+  // 2. Compute common suffix
+  let oldSuffix = oldStr.length, newSuffix = newStr.length;
+  while (oldSuffix &gt; prefixLen && newSuffix &gt; prefixLen && oldStr[oldSuffix - 1] === newStr[newSuffix - 1]) {
+    oldSuffix--;
+    newSuffix--;
+  }
+
+  // 3. Expand outward to identifier boundaries ([a-zA-Z0-9_$?.\[\]])
+  function expandToken(str, start, end) {
+    if (!str || str.length === 0) return '';
+    let left = Math.max(0, Math.min(start, str.length - 1));
+    let right = Math.max(0, Math.min(end, str.length));
+    while (left &gt; 0 && /[a-zA-Z0-9_$?.\[\]]/.test(str[left - 1])) left--;
+    while (right &lt; str.length && /[a-zA-Z0-9_$?.\[\]]/.test(str[right])) right++;
+    return str.slice(left, right).trim();
+  }
+
+  return {
+    oldWord: expandToken(oldStr, prefixLen, oldSuffix),
+    fixedWord: expandToken(newStr, prefixLen, newSuffix)
+  };
+}</code></pre>
+
+    <h2>4.2 Prism Private Unicode Delimiter Injection</h2>
+    <p>
+      Injecting HTML markup (like <code>&lt;span class="highlight"&gt;</code>) directly into code before syntax highlighting corrupts Prism's regex lexer, causing HTML tags to be parsed as code tokens.
+    </p>
+    <p>
+      C-rev solves this by wrapping the target word with Unicode Private-Use Area characters:
+      <br>
+      • Start Marker: <code>\uFFF0</code> &nbsp;|&nbsp; End Marker: <code>\uFFF1</code>
+      <br>
+      Prism treats these characters as inert whitespace/text and highlights all internal keywords, strings, and operators normally. After Prism generates HTML, a single regex pass replaces the Unicode markers with zero-margin highlight spans:
+    </p>
+    <pre><code>const processed = line.replace(fixedWord, `\uFFF0${fixedWord}\uFFF1`);
+const highlighted = prism.highlight(processed, grammar, lang);
+return highlighted.replace(/\uFFF0([\s\S]*?)\uFFF1/g, '&lt;span class="cr-code-word-fixed"&gt;$1&lt;/span&gt;');</code></pre>
+
+    <h2>4.3 Zero-Drift Sub-Pixel Styling in <code>react-simple-code-editor</code></h2>
+    <p>
+      Because <code>react-simple-code-editor</code> overlays a transparent <code>&lt;textarea&gt;</code> directly above the syntax-highlighted <code>&lt;code&gt;</code> element, any horizontal padding or margin on highlighted spans shifts the rendered characters and breaks cursor alignment.
+    </p>
+    <p>
+      C-rev enforces <code>padding: 0 !important; margin: 0 !important;</code> on all highlight spans, achieving 100% character alignment while displaying vibrant green background illumination and bottom border accents.
+    </p>
+  </div>
+
+  <!-- PROFESSOR / VIVA QUESTIONS & ANSWERS -->
+  <div class="section-block page-break">
+    <h1>5. Professor & Viva Examination Preparation (Q&A)</h1>
+    <p>These questions and model answers explain the exact technical workings of the project for oral defense:</p>
+
+    <div class="viva-card">
+      <div class="viva-q">Q1: Explain the high-level architecture of your project. What is the role of frontend and backend?</div>
+      <div class="viva-a">
+        <strong>Technical Answer:</strong> C-rev uses a decoupled client-server architecture. The Frontend is built with React 18 and Vite for fast state management and dual-pane visual inspection. The Backend is an Express.js engine that provides two core services: an isolated OS child-process sandbox for runtime execution, and an AST profiling engine for automated peer review and Big-O analysis.
+        <div class="viva-speech">
+          <strong>Say to Professor:</strong> "Sir, hamara frontend React 18 aur Vite par hai jo dual-pane editor manage karta hai, aur backend Node.js Express par hai jo code ko safely execute karta hai aur AST diagnostics nikalta hai."
+        </div>
+      </div>
+    </div>
+
+    <div class="viva-card">
+      <div class="viva-q">Q2: How does the runtime execution sandbox work safely? Why doesn't it crash your server?</div>
+      <div class="viva-a">
+        <strong>Technical Answer:</strong> Rather than executing untrusted user code in the main Node.js event loop (e.g. via dangerous <code>eval()</code>), the server writes the code to a randomized temporary file in <code>os.tmpdir()</code> and executes it as a separate OS child process via <code>exec()</code> with an enforced 6,000ms watchdog timeout. If code loops infinitely, the child process is killed without affecting the main server.
+        <div class="viva-speech">
+          <strong>Say to Professor:</strong> "Sir, hum kabhi bhi eval() use nahi karte. Har code snippet ko OS ke temp directory me alag process ke roop me 6 second ke timeout ke saath run kiya jata hai. Agar code infinite loop me chala jaye, to sirf child process kill hota hai, server 100% safe rehta hai."
+        </div>
+      </div>
+    </div>
+
+    <div class="viva-card">
+      <div class="viva-q">Q3: How do you achieve word-level highlighting without breaking syntax highlighting?</div>
+      <div class="viva-a">
+        <strong>Technical Answer:</strong> We developed a two-stage algorithm. First, <code>getChangedTokenInfo</code> finds the common prefix and suffix between the old and new code lines and expands outward to identifier boundaries. Second, we wrap that word in non-breaking Unicode characters (<code>\uFFF0</code> and <code>\uFFF1</code>) before calling Prism. Prism highlights the code normally without corrupting HTML tags, and a post-processing regex substitutes the Unicode markers with styling spans with zero horizontal padding to prevent cursor misalignment.
+        <div class="viva-speech">
+          <strong>Say to Professor:</strong> "Sir, agar hum Prism ke pehle HTML tag daalein to syntax coloring kharab ho jati hai. Isliye hum pehle invisible Unicode markers lagate hain, Prism syntax coloring karta hai, aur baad me hum markers ko zero-margin highlight span me convert kar dete hain."
+        </div>
+      </div>
+    </div>
+
+    <div class="viva-card">
+      <div class="viva-q">Q4: What is the significance of the Dual Diff comparison card?</div>
+      <div class="viva-a">
+        <strong>Technical Answer:</strong> Traditional linters show either the error or the fix in isolation. C-rev renders a synchronous side-by-side comparison displaying the exact faulty line with root-cause diagnostics on the red panel, and the corrected line with remediation explanation on the green panel. It also enables 1-click automated patching directly into the active editor state.
+        <div class="viva-speech">
+          <strong>Say to Professor:</strong> "Sir, dual diff card me user ko ek taraf error wali line root cause ke saath red me dikhti hai, aur doosri taraf corrected code solution ke saath green me dikhta hai. User 1 click me code editor me fix apply kar sakta hai."
+        </div>
+      </div>
+    </div>
+
+    <div class="viva-card">
+      <div class="viva-q">Q5: How is multi-file workspace and state persistence implemented?</div>
+      <div class="viva-a">
+        <strong>Technical Answer:</strong> The workspace state is maintained as an array of file objects in React, each encapsulating file ID, name, code, language, active review markdown, run result, and applied fix metadata. We also maintain a 7-day auto-expiring local storage cache (<code>crev_code_history</code>) to preserve sessions across browser reloads without requiring an external database.
+        <div class="viva-speech">
+          <strong>Say to Professor:</strong> "Sir, multi-file workspace React ke state array me maintain hota hai jisme har file ka code, language aur review cached rehta hai. Iske alawa 7-day expiration logic ke saath localStorage me session history save hoti hai."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO BUILD STEP-BY-STEP -->
+  <div class="section-block page-break">
+    <h1>6. How to Build This Project From Scratch (Step-by-Step Guide)</h1>
+    <p>If another engineer or student wishes to replicate or extend this project, follow this structured roadmap:</p>
+
+    <h2>Step 1: Backend Foundation & Sandbox (Node.js + Express)</h2>
+    <ol>
+      <li>Initialize Node project: <code>npm init -y</code> and configure <code>"type": "module"</code> in <code>package.json</code>.</li>
+      <li>Install runtime dependencies: <code>npm install express cors dotenv @google/genai</code>.</li>
+      <li>Create <code>server.js</code> and configure Express middleware (<code>cors()</code>, <code>express.json({ limit: '10mb' })</code>).</li>
+      <li>Implement child process execution using <code>exec()</code> with temporary files created via <code>fs/promises.writeFile()</code> and cleaned up in a <code>finally</code> block.</li>
+      <li>Implement diagnostic fallback: if child process returns error, pass error trace and code to Gemini Flash model with structured JSON response schema.</li>
+    </ol>
+
+    <h2>Step 2: Frontend Client Scaffold (React + Vite)</h2>
+    <ol>
+      <li>Initialize React Vite project: <code>npm create vite@latest Frontend -- --template react</code>.</li>
+      <li>Install dependencies: <code>npm install react-simple-code-editor prismjs lucide-react axios react-markdown rehype-highlight</code>.</li>
+      <li>Import Prism stylesheets (<code>prismjs/themes/prism-tomorrow.css</code>) and individual language grammars (javascript, python, cpp, java, etc.).</li>
+      <li>Create the LeetCode Charcoal design system in <code>App.css</code> with custom scrollbars, monospace typography, and split panes.</li>
+    </ol>
+
+    <h2>Step 3: Editor Integration & Differential Token Highlighter</h2>
+    <ol>
+      <li>Render the <code>&lt;Editor&gt;</code> component inside a canvas container synchronized with a custom line-number gutter.</li>
+      <li>Implement <code>getChangedTokenInfo(oldStr, newStr)</code> to isolate replaced expressions.</li>
+      <li>In the editor's <code>highlight</code> prop function, inject <code>\uFFF0</code> and <code>\uFFF1</code> around the identified word, run <code>prism.highlight()</code>, and substitute with <code>.cr-code-word-fixed</code>.</li>
+    </ol>
+
+    <h2>Step 4: Dual-Pane Studio & Tabbed Review Panel</h2>
+    <ol>
+      <li>Create the right-hand studio pane with 4 tabs: <em>Terminal</em>, <em>Peer Review</em>, <em>Diagnostics</em>, and <em>Architecture</em>.</li>
+      <li>Add a split-panel parser for review responses using the <code>---SPLIT_DETAIL---</code> delimiter to provide a concise verdict by default and an expandable deep-dive accordion on demand.</li>
+      <li>Add a global <code>keydown</code> listener for <code>Ctrl + Enter</code> to trigger audits seamlessly.</li>
+    </ol>
+
+    <h2>Step 5: Deployment & Git Version Control</h2>
+    <ol>
+      <li>Add a root <code>.gitignore</code> excluding <code>node_modules/</code>, <code>dist/</code>, and all <code>.env</code> files.</li>
+      <li>Publish the repository to GitHub: <code>git init &amp;&amp; git branch -M main &amp;&amp; git push -u origin main</code>.</li>
+    </ol>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="section-block">
+    <h1>7. Conclusion & Future Roadmap</h1>
+    <p>
+      <strong>C-rev</strong> demonstrates that modern software developer tools can achieve both high performance and deep automated remediation without compromising developer experience. By replacing generic conversational interfaces with a purpose-built, dual-pane studio layout, programmers obtain instant feedback, sub-pixel token highlighting, and verifiable runtime safety.
+    </p>
+    <h3>Future Enhancements:</h3>
+    <ul>
+      <li><strong>Dockerized MicroVM Sandboxes:</strong> Transition from OS child processes to containerized WebAssembly / Firecracker microVMs for cloud-scale multi-tenant isolation.</li>
+      <li><strong>Git Pull Request Webhook Bot:</strong> Automatically post dual diff remediation suggestions directly on GitHub / GitLab pull requests.</li>
+      <li><strong>Custom Team Linting Rules:</strong> Support custom organizational AST rules (e.g. ESLint / Pylint config ingestion).</li>
+    </ul>
+  </div>
+
+</body>
+</html>
