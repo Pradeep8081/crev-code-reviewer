@@ -1,0 +1,89 @@
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* UI/UX Pro Max Studio Dark Precision Tokens (Zero Glassmorphism) */
+  --bg-app: #090d14;
+  --bg-sidebar: #0d121c;
+  --bg-panel: #0f1523;
+  --bg-editor: #090d16;
+  --bg-terminal: #070a10;
+  --bg-card: #141b2b;
+  --bg-card-hover: #1a2337;
+  --bg-active: #1e293b;
+
+  --border-subtle: #192233;
+  --border-strong: #232f46;
+  --border-focus: #3b82f6;
+
+  /* Action Accents */
+  --accent-run: #16a34a;
+  --accent-run-hover: #22c55e;
+  --accent-run-active: #15803d;
+
+  --accent-review: #2563eb;
+  --accent-review-hover: #3b82f6;
+  --accent-review-active: #1d4ed8;
+
+  --accent-cyan: #0ea5e9;
+  --accent-amber: #f59e0b;
+  --accent-rose: #ef4444;
+
+  /* Typography */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --text-dim: #475569;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+/* Developer High-Contrast Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+::selection {
+  background: #2563eb;
+  color: #ffffff;
+}
