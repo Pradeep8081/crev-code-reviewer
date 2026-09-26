@@ -205,8 +205,8 @@ function extractDiffInfo(originalCode, fixedCode, bugAnalysis) {
   };
 }
 
-// Custom Engineering Emblem: Minimalist geometric 'C' bracket with code-inspection chevron
-function CrevLogo({ size = 28 }) {
+// Custom Engineering Emblem: LeetCode-inspired geometric 'C' bracket with code-inspection chevron
+function CrevLogo({ size = 26 }) {
   return (
     <svg 
       width={size} 
@@ -216,46 +216,38 @@ function CrevLogo({ size = 28 }) {
       xmlns="http://www.w3.org/2000/svg"
       className="cr-logo-svg"
     >
-      <defs>
-        <linearGradient id="crBrandGrad" x1="4" y1="4" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#38bdf8" />
-          <stop offset="0.6" stopColor="#0ea5e9" />
-          <stop offset="1" stopColor="#2563eb" />
-        </linearGradient>
-      </defs>
-      
-      {/* Precision Frame */}
+      {/* Precision Dark Frame */}
       <rect 
         x="1.5" 
         y="1.5" 
         width="25" 
         height="25" 
-        rx="6.5" 
-        fill="#0c1322" 
-        stroke="rgba(56, 189, 248, 0.35)" 
+        rx="5.5" 
+        fill="#222222" 
+        stroke="#383838" 
         strokeWidth="1.2" 
       />
       
-      {/* Geometric 'C' Bracket */}
+      {/* Geometric 'C' Bracket - LeetCode Signature Amber */}
       <path 
         d="M19 8.5H11C8.79 8.5 7 10.29 7 12.5V15.5C7 17.71 8.79 19.5 11 19.5H19" 
-        stroke="url(#crBrandGrad)" 
+        stroke="#ffa116" 
         strokeWidth="2.2" 
         strokeLinecap="round" 
         strokeLinejoin="round" 
       />
       
-      {/* Code Review Chevron / Inspection Pointer */}
+      {/* Code Review Chevron / Inspection Pointer - LeetCode Emerald */}
       <path 
         d="M12.5 11.5L16 14L12.5 16.5" 
-        stroke="#38bdf8" 
+        stroke="#2cbb5d" 
         strokeWidth="2" 
         strokeLinecap="round" 
         strokeLinejoin="round" 
       />
       
       {/* Precision Node Dot */}
-      <circle cx="19" cy="8.5" r="1.4" fill="#38bdf8" />
+      <circle cx="19" cy="8.5" r="1.4" fill="#ffa116" />
     </svg>
   );
 }
@@ -1084,10 +1076,10 @@ export default function App() {
           </button>
 
           {/* C-rev Brand */}
-          <div className="cr-brand-cluster" onClick={handleCycleSample} title="C-rev Studio">
-            <CrevLogo size={28} />
+          <div className="cr-brand-cluster" onClick={handleCycleSample} title="C-rev Code Reviewer">
+            <CrevLogo size={26} />
             <span className="cr-brand-name">C-rev</span>
-            <span className="cr-brand-badge">STUDIO</span>
+            <span className="cr-brand-badge">REVIEWER</span>
           </div>
 
           <div className="cr-nav-separator" />
@@ -1106,8 +1098,8 @@ export default function App() {
         <div className="cr-nav-actions">
           {/* Auto-detected Language Indicator */}
           <div className="cr-lang-pill" title="Language automatically detected from code syntax">
-            <span className="cr-radar-dot" />
-            <span className="cr-lang-label">Lang:</span>
+            <span className="cr-lang-dot" />
+            <span className="cr-lang-label">Language:</span>
             <span className="cr-lang-val">{LANGUAGE_LABELS[detectedLang] || detectedLang}</span>
           </div>
 
@@ -1159,24 +1151,23 @@ export default function App() {
             {isRunning ? (
               <>
                 <Loader2 size={13} className="cr-spinner" />
-                <span>Executing...</span>
+                <span>Running...</span>
               </>
             ) : (
               <>
                 <Play size={12} fill="#2cbb5d" color="#2cbb5d" />
-                <span>Run Code</span>
+                <span>Run</span>
               </>
             )}
           </button>
 
-          {/* Primary Hero Review Button (Highlighted & Animated) */}
+          {/* Primary Review / Submit Button */}
           <button 
-            className="cr-btn-review cr-btn-hero-animated" 
+            className="cr-btn-review" 
             onClick={reviewCode} 
             disabled={isRunning || isReviewing}
             title="Review Code (Ctrl + Enter)"
           >
-            <span className="cr-review-shimmer-sweep" />
             {isReviewing ? (
               <>
                 <Loader2 size={13} className="cr-spinner" />
@@ -1185,16 +1176,16 @@ export default function App() {
             ) : (
               <>
                 <FileCheck size={14} className="cr-review-icon" />
-                <span className="cr-review-btn-text">Code Review</span>
+                <span className="cr-review-btn-text">Submit Review</span>
                 <span className="cr-review-shortcut-tag">Ctrl ↵</span>
               </>
             )}
           </button>
 
           {/* Engine Status */}
-          <div className={`cr-engine-chip ${engineOnline ? 'online' : 'offline'}`} title="C-rev Engine Status">
+          <div className={`cr-engine-chip ${engineOnline ? 'online' : 'offline'}`} title="Backend Connection Status">
             <span className="cr-status-dot" />
-            <span>{engineOnline ? 'Engine 2.1' : 'Offline'}</span>
+            <span>{engineOnline ? 'Backend Online' : 'Offline'}</span>
           </div>
 
           <button className="cr-icon-btn" onClick={() => setShowSettings(true)} title="Settings">
@@ -1632,7 +1623,7 @@ export default function App() {
                   onClick={() => setStudioTab('terminal')}
                 >
                   <Terminal size={14} />
-                  <span>Terminal</span>
+                  <span>Console</span>
                   {runResult && (
                     <span className={`cr-tab-dot ${runResult.status === 'success' ? 'success' : 'error'}`} />
                   )}
@@ -1643,7 +1634,7 @@ export default function App() {
                   onClick={() => setStudioTab('review')}
                 >
                   <ShieldCheck size={14} />
-                  <span>Peer Review</span>
+                  <span>Code Review</span>
                   {review && <span className="cr-tab-dot success" />}
                 </button>
 
@@ -1652,7 +1643,7 @@ export default function App() {
                   onClick={() => setStudioTab('diagnostics')}
                 >
                   <AlertTriangle size={14} />
-                  <span>Diagnostics</span>
+                  <span>Bug Diagnosis</span>
                   {activeDiff && (
                     <span className={`cr-tab-badge ${activeDiff.isApplied ? 'success' : 'error'}`}>
                       {activeDiff.isApplied ? 'Fixed' : 'Error'}
@@ -1665,7 +1656,7 @@ export default function App() {
                   onClick={() => setStudioTab('complexity')}
                 >
                   <Layers size={14} />
-                  <span>Architecture</span>
+                  <span>Complexity</span>
                 </button>
               </div>
 
